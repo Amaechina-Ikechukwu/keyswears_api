@@ -1,9 +1,11 @@
 //@ts-ignore
-import express  from "express";
+const express = require("express");
+const { Request, Response } = require("express");
+
 import { loginDetails } from "./controllers/GetLoginDetails";
 const app = express();
 app.use(express.json());
-app.post("/login", async (req:any, res:any) => {
+app.post("/login", async (req:Request, res:Response) => {
   const data = req.body;
   try {
     if(!data.userId || !data.token){
