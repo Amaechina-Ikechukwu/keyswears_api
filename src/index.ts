@@ -2,7 +2,8 @@
 const express = require("express");
 const { Request, Response } = require("express");
 
-import { loginDetails } from "./controllers/GetLoginDetails";
+const { loginDetails } = require("./controllers/GetLoginDetails");
+
 const app = express();
 app.use(express.json());
 app.post("/login", async (req:Request, res:Response) => {
