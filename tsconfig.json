@@ -7,8 +7,10 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "type":"module"
   },
   "compileOnSave": true,
+  "type":"module",
   "include": ["src"]
 }
