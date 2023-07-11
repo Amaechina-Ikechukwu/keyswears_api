@@ -41,5 +41,6 @@
     "compilerOptions": {
       "esModuleInterop": true
     }
-  }
+  },
+  "type": "module"
 }
