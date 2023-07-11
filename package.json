@@ -37,12 +37,9 @@
   "devDependencies": {
     "@types/express": "^4.17.17"
   },
-  "tsconfig": {
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "module": "commonjs",
-    "target": "es6",
-
-    }
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es6"
   }
 }
