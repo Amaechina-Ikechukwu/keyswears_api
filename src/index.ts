@@ -1,6 +1,7 @@
+//@ts-ignore
 import express, { Request, Response } from "express";
 import { loginDetails } from "./controllers/GetLoginDetails";
-
+//@ts-ignore
 const app = express();
 app.use(express.json());
 app.post("/login", async (req: Request, res: Response) => {
