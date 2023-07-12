@@ -7,8 +7,7 @@
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "esModuleInterop": true,
-    
+    "esModuleInterop": true,  
   },
   "compileOnSave": true,
   "type":"module",
