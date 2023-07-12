@@ -1,7 +1,5 @@
-const express = require("express");
-const { Request, Response } = require("express");
-
-const { loginDetails } = require("./controllers/GetLoginDetails");
+import express, { Request, Response } from "express";
+import { loginDetails } from "./controllers/GetLoginDetails";
 
 const app = express();
 app.use(express.json());
