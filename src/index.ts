@@ -1,8 +1,14 @@
 //@ts-ignore
-import express , {Request,Response} from "express";
+import express , {Request,Response,NextFunction} from "express";
 import { loginDetails } from "./controllers/GetLoginDetails";
 const app = express();
 app.use(express.json());
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://d2eb-129-205-113-162.ngrok-free.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+})
 app.post("/login", async (req:Request, res:Response) => {
   const data = req.body;
   try {
