@@ -6,11 +6,8 @@ const supabase = createClient(
   process.env.SUPABASE_URL ?? "",
   process.env.SUPABASE_KEY ?? ""
 );
-export async function loginDetails(data: {
-  userId: string;
-  token: string;
-}): Promise<string> {
-  const { error: insertRowError } = await supabase.from('logindetails').insert([
+const registerNewUser =async (data)=>{
+   const { error: insertRowError } = await supabase.from('logindetails').insert([
     {
       userid: data.userId,
       token: data.token,
@@ -22,4 +19,36 @@ export async function loginDetails(data: {
   } else {
     return "Done";
   }
+}
+
+const updateToken =async()=> {
+  const {data:updatedData,error:updateError}= await supabase
+  .from('logindetails').update({token :data.token}).eq('userid',data.userId);
+  if(updateError){
+    throw new Error ( `Error updating username: ${updateError.message}` )
+  }
+  else
+
+  {
+    return done
+  }
+}
+export async function loginDetails(data: {
+  userId: string;
+  token: string;
+}): Promise<string> {
+ const Data = data;
+ const {data, error}= await supabase.from('logindetails').select('*').eq('userid',data.userId)
+ if(error){
+  throw new Error(`Error fetching user: ${error.message}`)
+ }
+ else
+ {
+  if (data.length == 0){
+    registerNewUser(Data)
+  }
+  else{
+    updateToken(Data)
+  }
+ }
 }

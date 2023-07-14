@@ -1,6 +1,7 @@
 //@ts-ignore
 import express , {Request,Response,NextFunction} from "express";
 import { loginDetails } from "./controllers/GetLoginDetails";
+import 'dotenv/config'
 const app = express();
 app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -19,6 +20,30 @@ app.post("/login", async (req:Request, res:Response) => {
        res.status(200).json({ message: result });
    }  } catch (error:any) {
     res.status(500).json({ error: error.message });
+  }
+});
+app.get("/webhook", (req: any, res: any) => {
+  if (req.query["hub.verify_token"] === process.env.VERIFY_TOKEN) {
+    res.send(req.query["hub.challenge"]);
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+app.post("/webhook", (req: any, res: any) => {
+  const body = req.body;
+ if (body.object === 'page' && body.entry) {
+    for (const entry of body.entry) {
+      if (entry.changes) {
+        for (const change of entry.changes) {
+          if (change.field === 'feed' && change.value && change.value.item === 'comment') {
+            const comment = change.value;
+            console.log('New comment:', comment);
+            // Take any desired actions based on the received comment information
+          }
+        }
+      }
+    }
   }
 });
    app.listen(3000,()=>{
