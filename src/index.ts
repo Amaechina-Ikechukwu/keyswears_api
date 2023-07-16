@@ -1,28 +1,42 @@
 //@ts-ignore
 import express , {Request,Response,NextFunction} from "express";
 import { loginDetails } from "./controllers/GetLoginDetails";
+import checkRequestBodyWithParams from "./middlewares/CheckBody"
+import GetUserPages from './controllers/GetListOfPages'
 import 'dotenv/config'
 const app = express();
+const pages = new GetUserPages()
 app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://0780-129-205-113-162.ngrok-free.app');
+  res.setHeader('Access-Control-Allow-Origin', 'https://3624-129-205-113-156.ngrok-free.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 })
-app.post("/login", async (req:Request, res:Response) => {
+app.post("/login", checkRequestBodyWithParams("userId","token"),async (req:Request, res:Response) => {
   const data = req.body;
   try {
-    if(!data.userId || !data.token){
-    res.status(400).json({error:`You are either missing user id or user token`})
-  }
-   else {const result = await loginDetails(data);
+    const result = await loginDetails(data);
        res.status(200).json({ message: result });
-   }  } catch (error:any) {
+    } catch (error:any) {
     res.status(500).json({ error: error.message });
   }
 });
-app.get("/webhook", (req: any, res: any) => {
+app.get("/listofpages",checkRequestBodyWithParams('userId','token'),async (req:Request,res:Response)=> {
+  const body = req.body;
+  try{
+    const result= await pages.ListOfPages(body.userId,body.token);
+  res.status(200).json({data:result})
+}catch(error:any){
+res.status(500).json({
+  error:error.message
+})
+  }
+  
+
+})
+////////////////////////////////
+app.get("/webhook", (req: Request, res: Response) => {
   if (req.query["hub.verify_token"] === process.env.VERIFY_TOKEN) {
     res.send(req.query["hub.challenge"]);
   } else {
