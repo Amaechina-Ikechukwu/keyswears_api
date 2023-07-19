@@ -10,10 +10,10 @@ const client = new Client({
 });
 
 const createTableFunction = (userid: string) => {
-  const tableName = `userid_${userid}`; // Prefixing with "u" to create a valid table name
+  const tableName = `userid_${userid}`;
   const createTable = `
     CREATE TABLE IF NOT EXISTS ${tableName} (
-    
+      id SERIAL PRIMARY KEY
     )
   `;
   return createTable;
@@ -31,7 +31,7 @@ class TableCreationController {
       console.error("Error creating table: " + error);
       throw new Error("Error creating table: " + error);
     } finally {
-      await client.end(); // Disconnect from the database
+      // Do not disconnect the client here
     }
   }
 }
