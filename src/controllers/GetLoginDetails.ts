@@ -9,10 +9,13 @@ const supabaseKey: string = process.env.SUPABASE_KEY || "";
 const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 const createNewUserTable = new TableCreationController();
 
-const registerNewUser = async (data: {
-  userId: string;
-  token: string;
-}): Promise<string> => {
+const registerNewUser = async (
+  data: {
+    userId: string;
+    token: string;
+  },
+  uuid: string
+): Promise<any> => {
   try {
     await createNewUserTable.createTable(data.userId);
 
@@ -22,13 +25,15 @@ const registerNewUser = async (data: {
         {
           userid: data.userId,
           token: data.token,
+          uuid: uuid,
         },
       ]);
 
     if (insertRowError) {
       throw new Error(`There seems to be an error: ${insertRowError.message}`);
     } else {
-      return "done";
+      const uid = { uuid: uuid };
+      return uid;
     }
   } catch (error: any) {
     throw new Error(`Error registering new user: ${error.message}`);
@@ -55,10 +60,13 @@ const updateToken = async (data: {
   }
 };
 
-export async function loginDetails(data: {
-  userId: string;
-  token: string;
-}): Promise<void> {
+export async function loginDetails(
+  data: {
+    userId: string;
+    token: string;
+  },
+  uuid: string
+): Promise<void> {
   try {
     const { data: userData, error } = await supabase
       .from("logindetails")
@@ -69,7 +77,7 @@ export async function loginDetails(data: {
       throw new Error(`Error fetching user: ${error.message}`);
     } else {
       if (userData.length === 0) {
-        await registerNewUser(data);
+        await registerNewUser(data, uuid);
       } else {
         await updateToken(data);
       }
