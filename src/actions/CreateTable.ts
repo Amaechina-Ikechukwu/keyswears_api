@@ -1,14 +1,6 @@
 const { Client } = require("pg");
 require("dotenv").config();
 
-const client = new Client({
-  host: process.env.PG_HOST,
-  port: 5432,
-  database: "postgres",
-  user: "postgres",
-  password: process.env.PG_PASSWORD,
-});
-
 const createTableFunction = (userid: string) => {
   const tableName = `userid_${userid}`;
   const createTable = `
@@ -21,6 +13,14 @@ const createTableFunction = (userid: string) => {
 
 class TableCreationController {
   public async createTable(userid: string): Promise<string> {
+    const client = new Client({
+      host: process.env.PG_HOST,
+      port: 5432,
+      database: "postgres",
+      user: "postgres",
+      password: process.env.PG_PASSWORD,
+    });
+
     try {
       await client.connect(); // Connect to the database
 
@@ -31,7 +31,7 @@ class TableCreationController {
       console.error("Error creating table: " + error);
       throw new Error("Error creating table: " + error);
     } finally {
-      // Do not disconnect the client here
+      await client.end(); // Disconnect from the database
     }
   }
 }
