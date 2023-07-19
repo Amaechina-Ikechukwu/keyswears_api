@@ -68,7 +68,7 @@ export async function loginDetails(
     uuid: string;
   },
   uuid: string
-): Promise<void> {
+): Promise<string[] | string> {
   try {
     const { data: userData, error } = await supabase
       .from("logindetails")
@@ -79,9 +79,11 @@ export async function loginDetails(
       throw new Error(`Error fetching user: ${error.message}`);
     } else {
       if (userData.length === 0) {
-        await registerNewUser(data, uuid);
+        const result = await registerNewUser(data, uuid);
+        return result;
       } else {
-        await updateToken(data);
+        const result = await updateToken(data);
+        return result;
       }
     }
   } catch (error: any) {
