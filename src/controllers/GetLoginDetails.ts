@@ -43,12 +43,13 @@ const registerNewUser = async (
 const updateToken = async (data: {
   userId: string;
   token: string;
+  uuid: string;
 }): Promise<string> => {
   try {
     const { error: updateError } = await supabase
       .from("logindetails")
       .update({ token: data.token })
-      .eq("userid", data.userId);
+      .eq("uuid", data.uuid);
 
     if (updateError) {
       throw new Error(`Error updating token: ${updateError.message}`);
@@ -64,6 +65,7 @@ export async function loginDetails(
   data: {
     userId: string;
     token: string;
+    uuid: string;
   },
   uuid: string
 ): Promise<void> {
