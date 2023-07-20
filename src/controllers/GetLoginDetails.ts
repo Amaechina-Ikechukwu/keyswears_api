@@ -1,12 +1,8 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import supabase from "../../supabase";
 import dotenv from "dotenv";
 import TableCreationController from "../actions/CreateTable";
 dotenv.config();
 
-// Provide a custom schema. Defaults to "public".
-const supabaseUrl: string = process.env.SUPABASE_URL || "";
-const supabaseKey: string = process.env.SUPABASE_KEY || "";
-const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
 const createNewUserTable = new TableCreationController();
 
 const registerNewUser = async (

@@ -5,7 +5,17 @@ const createTableFunction = (userid: string) => {
   const tableName = `userid_${userid}`;
   const createTable = `
     CREATE TABLE IF NOT EXISTS ${tableName} (
-      id SERIAL PRIMARY KEY
+      id SERIAL PRIMARY KEY,
+      field BIGINT,
+      from JSONB,
+      post JSONB,
+      message BIGINT,
+      postid BIGINT,
+      createdtime BIGINT,
+      item BIGINT,
+      parentid BIGINT,
+      verb BIGINT
+      
     )
   `;
   return createTable;

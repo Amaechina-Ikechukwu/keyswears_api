@@ -2,7 +2,7 @@ import axios from "axios";
 
 class SubscribePages {
   public async PagesToSubscribe(
-    pageId: string,
+    pages: any[],
     token: string
   ): Promise<string[]> {
     try {
@@ -10,9 +10,9 @@ class SubscribePages {
         subscribed_fields: "feed",
         access_token: token,
       };
-
+      const pageid = pages[0]?.id;
       const response = await axios.get(
-        `https://graph.facebook.com/${pageId}/subscribed_apps`,
+        `https://graph.facebook.com/${pageid}/subscribed_apps`,
         {
           params,
         }
@@ -20,9 +20,9 @@ class SubscribePages {
 
       // Assuming the response data is an object with an 'accounts' property that contains an array of page objects,
       // extract the 'name' property from each page object and return as an array of strings.
-      const pages = response.data;
+      const result = response.data;
 
-      return pages;
+      return result;
     } catch (error: any) {
       throw new Error("Error fetching data: " + error);
     }
