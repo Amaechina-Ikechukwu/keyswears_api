@@ -1,19 +1,17 @@
 import supabase from "../../../supabase";
 
 class GetOwnerOfThePage {
-  /**
-   * async function PageOwner
-   */
   public async PageOwner(pageid: string) {
     const { error, data } = await supabase
-      .from("logindetails")
+      .from("pages")
       .select()
-      .match({ pages: { pageid: pageid } });
+      .eq("pageid", pageid);
 
     if (error) {
-      throw new Error(`Error finding user pages ${error}`);
+      console.error("Supabase query error:", error);
+      throw new Error(`Error finding user pages: ${error.message}`);
     } else {
-      const uid = data[0]?.userid;
+      const uid = data[0]?.uuid;
       return uid;
     }
   }

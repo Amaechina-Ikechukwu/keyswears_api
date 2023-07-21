@@ -7,11 +7,20 @@ import { v4 as uuidv4 } from "uuid";
 import insertValueToArrayColumn from "../../actions/Pages/AnotherUserPages";
 import UserId from "../../actions/Pages/GetUserId";
 import RecordPageWebhooks from "../../actions/Pages/RecordWebhook";
+import validateUUIDMiddleware from "../ValidatedUUIDHeader";
 const pages = new GetUserPages();
 const userid = new UserId();
 const subscribePage = new SubscribePages();
 const pageWebhooks = new RecordPageWebhooks();
 const router = Router();
+// Extend the Request interface to include a 'uuid' property
+declare global {
+  namespace Express {
+    interface Request {
+      uuid?: string;
+    }
+  }
+}
 router.post(
   "/login",
   checkRequestBodyWithParams("userId", "token"),
@@ -34,11 +43,11 @@ const returnUserId = async (uuid: any) => {
 
 router.get(
   "/listofpages",
-  checkRequestBodyWithParams("uuid", "token"),
+  validateUUIDMiddleware, // Apply the custom UUID validation middleware
   async (req: Request, res: Response) => {
-    const body = req.body;
+    const userid: any = await returnUserId(req.uuid);
     try {
-      const result = await pages.ListOfPages(body.userId, body.token);
+      const result = await pages.ListOfPages(userid, req.uuid || "");
       res.status(200).json(result);
     } catch (error: any) {
       res.status(500).json({
@@ -49,11 +58,11 @@ router.get(
 );
 router.post(
   "/subscribe",
-  checkRequestBodyWithParams("pages", "token", "uuid"),
+  checkRequestBodyWithParams("pages", "uuid"),
   async (req: Request, res: Response) => {
     const body = req.body;
     try {
-      await subscribePage.PagesToSubscribe(body.pages, body.token);
+      await subscribePage.PagesToSubscribe(body.pages);
       const result = await insertValueToArrayColumn(body.pages, body.uuid);
       res.status(200).json(result);
     } catch (error: any) {

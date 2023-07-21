@@ -1,29 +1,29 @@
 import axios from "axios";
 
 class SubscribePages {
-  public async PagesToSubscribe(
-    pages: any[],
-    token: string
-  ): Promise<string[]> {
+  public async PagesToSubscribe(pages: any): Promise<string[]> {
+    console.log(pages.id);
     try {
-      const params = {
-        subscribed_fields: "feed",
-        access_token: token,
-      };
-      const pageid = pages[0]?.id;
-      const response = await axios.get(
+      const pageid = pages.id;
+      const formData = new URLSearchParams();
+      formData.append("subscribed_fields", "feed");
+      formData.append("access_token", pages.access_token);
+
+      const response = await axios.post(
         `https://graph.facebook.com/${pageid}/subscribed_apps`,
+        formData,
         {
-          params,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         }
       );
 
-      // Assuming the response data is an object with an 'accounts' property that contains an array of page objects,
-      // extract the 'name' property from each page object and return as an array of strings.
       const result = response.data;
-
       return result;
     } catch (error: any) {
+      console.error("Error response status:", error.response?.status);
+      console.error("Error response data:", error.response?.data);
       throw new Error("Error fetching data: " + error);
     }
   }

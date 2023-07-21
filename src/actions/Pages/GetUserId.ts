@@ -5,16 +5,27 @@ import supabase from "../../../supabase";
  */
 class UserId {
   public async GetUserId(uuid: string) {
-    const { error, data } = await supabase
-      .from("logindetails")
-      .select()
-      .eq("uuid", uuid);
-    if (error) {
-      throw new Error(`Error adding data ${error}`);
-    } else {
-      console.log(data);
-      return data;
+    try {
+      const { data, error } = await supabase
+        .from("logindetails")
+        .select("userid")
+        .eq("uuid", uuid)
+        .single();
+
+      if (error) {
+        // Log the error for debugging purposes
+        console.error("Supabase query error:", error);
+        throw new Error(`Error getting data: ${error.message}`);
+      }
+
+      // Return the userid if data is available
+      return data?.userid;
+    } catch (error) {
+      // Handle any other potential errors
+      console.error("Error retrieving user ID:", error);
+      throw new Error("An error occurred while fetching the user ID.");
     }
   }
 }
+
 export default UserId;
