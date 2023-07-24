@@ -20,7 +20,8 @@ const createTableFunction = (userid: string) => {
       verb TEXT,
       field TEXT,
       reaction_type TEXT,
-      pagehash TEXT
+      pagehash TEXT,
+      action_statement TEXT
     )
   `;
   return createTable;
