@@ -61,10 +61,15 @@ router.post(
   checkRequestBodyWithParams("pages", "uuid"),
   async (req: Request, res: Response) => {
     const body = req.body;
+    const pages = body.pages;
     try {
-      await subscribePage.PagesToSubscribe(body.pages);
-      const result = await insertValueToArrayColumn(body.pages, body.uuid);
-      res.status(200).json(result);
+      await pages.map(async (page: any) => {
+        await subscribePage.PagesToSubscribe(page);
+
+        await insertValueToArrayColumn(page, body.uuid);
+      });
+
+      res.status(200).json({ message: "done" });
     } catch (error: any) {
       res.status(500).json({
         error: error.message,
