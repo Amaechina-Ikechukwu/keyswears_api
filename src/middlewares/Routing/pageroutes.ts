@@ -1,15 +1,17 @@
 import { Router, Request, Response } from "express";
 import checkRequestBodyWithParams from "../CheckBody";
 import { loginDetails } from "../../controllers/GetLoginDetails";
-import GetUserPages from "../../controllers/Pages/GetListOfPages";
+import GetListOfPages from "../../controllers/Pages/GetListOfPages";
 import SubscribePages from "../../controllers/Pages/SubscribePage";
 import { v4 as uuidv4 } from "uuid";
 import insertValueToArrayColumn from "../../actions/Pages/AnotherUserPages";
 import UserId from "../../actions/Pages/GetUserId";
 import RecordPageWebhooks from "../../actions/Pages/RecordWebhook";
 import validateUUIDMiddleware from "../ValidatedUUIDHeader";
-const pages = new GetUserPages();
+import UserPages from "../../controllers/Pages/GetUserPages";
+const pages = new GetListOfPages();
 const userid = new UserId();
+const userpages = new UserPages();
 const subscribePage = new SubscribePages();
 const pageWebhooks = new RecordPageWebhooks();
 const router = Router();
@@ -48,6 +50,20 @@ router.get(
     const userid: any = await returnUserId(req.uuid);
     try {
       const result = await pages.ListOfPages(userid, req.uuid || "");
+      res.status(200).json(result);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/getuserpages",
+  validateUUIDMiddleware, // Apply the custom UUID validation middleware
+  async (req: Request, res: Response) => {
+    try {
+      const result = await userpages.GetUserPages(req.uuid || "");
       res.status(200).json(result);
     } catch (error: any) {
       res.status(500).json({

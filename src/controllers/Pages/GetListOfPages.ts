@@ -1,7 +1,7 @@
 import axios from "axios";
 import supabase from "../../../supabase";
 
-class GetUserPages {
+class GetListOfPages {
   public async ListOfPages(userId: string, uuid: string): Promise<string[]> {
     const usertoken = await this.GetUserToken(uuid);
 
@@ -40,4 +40,4 @@ class GetUserPages {
   }
 }
 
-export default GetUserPages;
+export default GetListOfPages;
