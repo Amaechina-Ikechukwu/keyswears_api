@@ -1,5 +1,6 @@
 import { Client } from "pg";
 import dotenv from "dotenv";
+// import supabase from "../../supabase";
 
 dotenv.config();
 
@@ -29,11 +30,12 @@ const createTableFunction = (userid: string) => {
 
 class TableCreationController {
   public async createTable(userid: string): Promise<string> {
+    // const tableName = `userid_${userid}`;
     const client = new Client({
       host: process.env.PG_HOST,
-      port: Number(process.env.PG_PORT), // Convert the port to a number
-      database: process.env.PG_DATABASE,
-      user: process.env.PG_USER,
+      port: 5432,
+      database: "postgres",
+      user: "postgres",
       password: process.env.PG_PASSWORD,
     });
 
@@ -49,6 +51,22 @@ class TableCreationController {
     } finally {
       await client.end(); // Disconnect from the database
     }
+    // try {
+    //   // Call the RPC function with the required parameters
+    //   await supabase.rpc("refresh_schema");
+    //   const { data, error } = await supabase.rpc("create_table", {
+    //     table_name: tableName,
+    //   });
+
+    //   if (error) {
+    //     throw new Error(error.message);
+    //   }
+    //   console.log({ data });
+    //   return data;
+    // } catch (error: any) {
+    //   console.log({ error });
+    //   return error.message;
+    // }
   }
 }
 
