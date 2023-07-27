@@ -23,6 +23,7 @@ class RecordPageWebhooks {
       field: pdata.field || null,
       reaction_type: pagedata.reaction_type || null,
       pagehash: pagehash,
+      message:pagedata.message
     };
     try {
       if (!checkhash) {
