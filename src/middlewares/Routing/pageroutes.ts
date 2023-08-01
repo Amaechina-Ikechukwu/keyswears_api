@@ -72,6 +72,7 @@ router.get(
     }
   }
 );
+
 router.post(
   "/subscribe",
   checkRequestBodyWithParams("pages", "uuid"),

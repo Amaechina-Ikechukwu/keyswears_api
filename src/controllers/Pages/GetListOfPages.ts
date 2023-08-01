@@ -7,7 +7,8 @@ class GetListOfPages {
 
     try {
       const response = await axios.get(
-        `https://graph.facebook.com/${userId}/accounts?access_token=${usertoken}`,
+        `https://graph.facebook.com/v17.0/${userId}/accounts?
+  access_token=${usertoken}`,
         {
           params: {
             access_token: usertoken,
