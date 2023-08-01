@@ -19,7 +19,7 @@ const validateUUIDMiddleware = (req: any, res: any, next: any) => {
 
   const token = authorizationHeader.substring(7); // Remove "Bearer " from the header
   const verifiedToken = VerifyToken(token);
-  console.log(verifiedToken);
+
   // const uuid = extractUUIDFromToken(verifiedToken?.uuid);
   const uuid = verifiedToken?.uuid;
 
