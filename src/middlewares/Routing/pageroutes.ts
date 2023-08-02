@@ -10,6 +10,7 @@ import RecordPageWebhooks from "../../actions/Pages/RecordWebhook";
 import validateUUIDMiddleware from "../ValidatedUUIDHeader";
 import UserPages from "../../controllers/Pages/GetUserPages";
 import VerifyToken from "../JWTVerify";
+import ReplyComment from "../../controllers/Pages/ReplyComment";
 const pages = new GetListOfPages();
 const userid = new UserId();
 const userpages = new UserPages();
@@ -89,6 +90,23 @@ router.post(
       });
 
       res.status(200).json({ message: "done" });
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.post(
+  "/replycomment",
+  checkRequestBodyWithParams("pageid", "message", "commentid"),
+  async (req: Request, res: Response) => {
+    const body = req.body;
+
+    try {
+      const result = await new ReplyComment().Reply(body);
+
+      res.status(200).json({ message: result });
     } catch (error: any) {
       res.status(500).json({
         error: error.message,

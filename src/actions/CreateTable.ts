@@ -13,7 +13,7 @@ const createTableFunction = (userid: string) => {
       from_id TEXT,
       post JSONB,
       message TEXT,
-      postid TEXT,
+      pageid TEXT,
       createdtime BIGINT,
       comment_id TEXT,
       item TEXT,

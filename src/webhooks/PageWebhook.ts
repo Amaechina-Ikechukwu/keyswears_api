@@ -23,7 +23,7 @@ router.post("/pages/webhook", async (req: any, res: any) => {
           const pageid = change.value.post_id?.split("_")[0];
 
           const owneruuid = await pageOwner.PageOwner(pageid);
-          console.log({ pageid, owneruuid });
+          console.log({ change });
           const owner = await getuserid.GetUserId(owneruuid);
           try {
             await recordpagewebhook.PageChanges(owner, change);

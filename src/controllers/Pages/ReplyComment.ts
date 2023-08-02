@@ -8,6 +8,7 @@ interface Data {
   pageid: string;
   message: string;
   commentid: string;
+  to: string;
 }
 
 class ReplyComment {
@@ -17,14 +18,10 @@ class ReplyComment {
   public async Reply(data: Data): Promise<Result | undefined> {
     try {
       const pageAccessToken = await new GetPageAccessToken().PageAccessToken(
-        data.pageid
+        data.pageid.split("_")[0]
       );
       const response = await axios.post(
-        `https://www.graph.facebook.com/${data.commentid}/comments`,
-        {
-          message: `${data.message}, @[{user-id}]`,
-          access_token: pageAccessToken,
-        }
+        `https://graph.facebook.com/${data.commentid}/comments?message=${data.message}&access_token=${pageAccessToken}`
       );
 
       const result: Result = response.data;
