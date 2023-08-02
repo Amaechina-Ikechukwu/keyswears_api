@@ -9,6 +9,7 @@ import UserId from "../../actions/Pages/GetUserId";
 import RecordPageWebhooks from "../../actions/Pages/RecordWebhook";
 import validateUUIDMiddleware from "../ValidatedUUIDHeader";
 import UserPages from "../../controllers/Pages/GetUserPages";
+import VerifyToken from "../JWTVerify";
 const pages = new GetListOfPages();
 const userid = new UserId();
 const userpages = new UserPages();
@@ -79,11 +80,12 @@ router.post(
   async (req: Request, res: Response) => {
     const body = req.body;
     const pages = body.pages;
+    const verifiedToken = await VerifyToken(body.uuid);
     try {
       await pages.map(async (page: any) => {
         await subscribePage.PagesToSubscribe(page);
 
-        await insertValueToArrayColumn(page, body.uuid);
+        await insertValueToArrayColumn(page, verifiedToken.uuid);
       });
 
       res.status(200).json({ message: "done" });
