@@ -44,7 +44,21 @@ const returnUserId = async (uuid: any) => {
   const uid = await userid.GetUserId(uuid);
   return uid;
 };
+router.get(
+  "/userid",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const userid: any = await returnUserId(req.uuid);
 
+      res.status(200).json(userid);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
 router.get(
   "/listofpages",
   validateUUIDMiddleware, // Apply the custom UUID validation middleware
