@@ -8,7 +8,7 @@ export default async function GetLongLiveUserToken(
     // const appId = process.env.CLIENT_ID;
     // const appSecret = process.env.CLIENT_SECRET;
     const yourAccessToken = token;
-    const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=533621215529346&client_secret=64e632f4c65f4b0ad17da4ea55a090bb&fb_exchange_token=${yourAccessToken}`;
+    const url = `https://graph.facebook.com/v17.0/oauth/access_token?grant_type=fb_exchange_token&client_id=662650212194236&client_secret=bd5bc5580410ee2a5aeb13a306206557&fb_exchange_token=${yourAccessToken}`;
 
     const response = await axios.get(url);
     const result = response.data.access_token;
