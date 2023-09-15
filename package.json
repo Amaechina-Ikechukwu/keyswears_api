@@ -2,7 +2,7 @@
   "name": "lindasales",
   "version": "1.0.0",
   "description": "integration of social features for effective marketing and customer relations",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build && nodemon --exec \"ts-node\" src/index.ts",
@@ -47,10 +47,5 @@
     "@types/express": "^4.17.17",
     "@types/pg": "^8.10.2",
     "@types/uuid": "^9.0.2"
-  },
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "target": "es6"
   }
 }
