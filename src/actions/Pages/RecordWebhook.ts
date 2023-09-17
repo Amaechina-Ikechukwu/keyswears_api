@@ -25,10 +25,11 @@ class RecordPageWebhooks {
       pagehash: pagehash,
       message: pagedata.message || null,
     };
+    console.log({ datafrompage });
     try {
       if (!checkhash) {
         const { error: insertRowError } = await supabase
-          .from(`userid_${userid}`)
+          .from(`page_notifications`)
           .insert(datafrompage);
 
         if (insertRowError) {

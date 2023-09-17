@@ -11,6 +11,8 @@ import validateUUIDMiddleware from "../ValidatedUUIDHeader";
 import UserPages from "../../controllers/Pages/GetUserPages";
 import VerifyToken from "../JWTVerify";
 import ReplyComment from "../../controllers/Pages/ReplyComment";
+
+import supabase from "../../../supabase";
 const pages = new GetListOfPages();
 const userid = new UserId();
 const userpages = new UserPages();
@@ -39,6 +41,21 @@ router.post(
     }
   }
 );
+router.post("/rpc", async (req: Request, res: Response) => {
+  const { table_name } = req.body;
+  try {
+    let { data, error } = await supabase.rpc("enable_realtime_for_table", {
+      table_name,
+    });
+
+    if (error) console.error(error);
+    else console.log(data);
+
+    res.status(200).json({ message: error });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
 ///////requiresuserid//////
 const returnUserId = async (uuid: any) => {
   const uid = await userid.GetUserId(uuid);

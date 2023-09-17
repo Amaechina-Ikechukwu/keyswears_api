@@ -1,6 +1,6 @@
 import { Client } from "pg";
 import dotenv from "dotenv";
-// import supabase from "../../supabase";
+// import supabase from "../../supabase"; // Replace "../../../supabase" with the correct relative path to the supabase module
 
 dotenv.config();
 
@@ -43,6 +43,9 @@ class TableCreationController {
       await client.connect(); // Connect to the database
 
       await client.query(createTableFunction(userid));
+      // const { error } = await supabase.rpc("rpc/execute-sql", {
+      //   query: `ALTER TABLE userid_${userid} ENABLE NOTIFY;`,
+      // });
 
       return "Table created";
     } catch (error: any) {
@@ -51,22 +54,6 @@ class TableCreationController {
     } finally {
       await client.end(); // Disconnect from the database
     }
-    // try {
-    //   // Call the RPC function with the required parameters
-    //   await supabase.rpc("refresh_schema");
-    //   const { data, error } = await supabase.rpc("create_table", {
-    //     table_name: tableName,
-    //   });
-
-    //   if (error) {
-    //     throw new Error(error.message);
-    //   }
-    //   console.log({ data });
-    //   return data;
-    // } catch (error: any) {
-    //   console.log({ error });
-    //   return error.message;
-    // }
   }
 }
 

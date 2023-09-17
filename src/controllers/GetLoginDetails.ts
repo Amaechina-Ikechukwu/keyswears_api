@@ -1,6 +1,6 @@
 import supabase from "../../supabase";
 import dotenv from "dotenv";
-import TableCreationController from "../actions/CreateTable";
+// import TableCreationController from "../actions/CreateTable";
 import GetLongLiveUserToken from "../actions/Pages/GetLongLiveUserToken";
 import SignToken from "../actions/Pages/JWTSign";
 // import UserId from "../actions/Pages/GetUserId";
@@ -8,7 +8,7 @@ import SignToken from "../actions/Pages/JWTSign";
 
 dotenv.config();
 
-const createNewUserTable = new TableCreationController();
+// const createNewUserTable = new TableCreationController();
 // const userid = new UserId();
 const registerNewUser = async (
   data: {
@@ -33,7 +33,16 @@ const registerNewUser = async (
     if (insertRowError) {
       throw new Error(`There seems to be an error: ${insertRowError.message}`);
     } else {
-      await createNewUserTable.createTable(data.userId);
+      // await createNewUserTable.createTable(data.userId);
+      // const { error } = await supabase.rpc("rpc/execute-sql", {
+      //   query: `SELECT enable_realtime_for_table(userid_${data.userId});`,
+      // });
+
+      // if (error) {
+      //   console.error({ error });
+      // } else {
+      //   console.log("Real-time enabled for new tables successfully!");
+      // }
       const uid = {
         usertoken: await SignToken({
           userid: data.userId,
