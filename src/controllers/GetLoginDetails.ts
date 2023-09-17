@@ -33,16 +33,6 @@ const registerNewUser = async (
     if (insertRowError) {
       throw new Error(`There seems to be an error: ${insertRowError.message}`);
     } else {
-      // await createNewUserTable.createTable(data.userId);
-      // const { error } = await supabase.rpc("rpc/execute-sql", {
-      //   query: `SELECT enable_realtime_for_table(userid_${data.userId});`,
-      // });
-
-      // if (error) {
-      //   console.error({ error });
-      // } else {
-      //   console.log("Real-time enabled for new tables successfully!");
-      // }
       const uid = {
         usertoken: await SignToken({
           userid: data.userId,
@@ -56,29 +46,6 @@ const registerNewUser = async (
     throw new Error(`Error registering new user: ${error.message}`);
   }
 };
-
-// const updateToken = async (data: {
-//   // userId: string;
-//   token: string;
-//   jwtToken: string;
-// }): Promise<string> => {
-//   try {
-//     const verifiedToken = VerifyToken(data.jwtToken);
-//     const uuid = userid.GetUserId(verifiedToken.uuid);
-//     const { error: updateError } = await supabase
-//       .from("logindetails")
-//       .update({ token: data.token })
-//       .eq("uuid", uuid);
-
-//     if (updateError) {
-//       throw new Error(`Error updating token: ${updateError.message}`);
-//     } else {
-//       return "Done";
-//     }
-//   } catch (error: any) {
-//     throw new Error(`Error updating token: ${error.message}`);
-//   }
-// };
 
 export async function loginDetails(
   data: {
