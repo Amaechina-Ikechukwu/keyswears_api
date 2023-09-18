@@ -69,7 +69,7 @@ export async function loginDetails(
         return result;
       } else {
         // const result = await updateToken(data);
-        return "null";
+        return userData[0].token;
       }
     }
   } catch (error: any) {

@@ -6,6 +6,7 @@ import SubscribePages from "../../controllers/Pages/SubscribePage";
 import { v4 as uuidv4 } from "uuid";
 import insertValueToArrayColumn from "../../actions/Pages/AnotherUserPages";
 import UserId from "../../actions/Pages/GetUserId";
+import { UserProfileInformation } from "../../actions/Pages/UserProfileInformation";
 import RecordPageWebhooks from "../../actions/Pages/RecordWebhook";
 import validateUUIDMiddleware from "../ValidatedUUIDHeader";
 import UserPages from "../../controllers/Pages/GetUserPages";
@@ -18,6 +19,7 @@ const userid = new UserId();
 const userpages = new UserPages();
 const subscribePage = new SubscribePages();
 const pageWebhooks = new RecordPageWebhooks();
+const userProfileInformation = new UserProfileInformation("v18.0");
 const router = Router();
 // Extend the Request interface to include a 'uuid' property
 declare global {
@@ -110,6 +112,20 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const result = await userpages.GetUserPages(req.uuid || "");
+      res.status(200).json(result);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/userinfo",
+  validateUUIDMiddleware, // Apply the custom UUID validation middleware
+  async (req: Request, res: Response) => {
+    try {
+      const result = await userProfileInformation.getPersonData(req.uuid);
       res.status(200).json(result);
     } catch (error: any) {
       res.status(500).json({
