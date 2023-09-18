@@ -62,7 +62,7 @@ const returnUserId = async (uuid: any) => {
   return uid;
 };
 router.get(
-  "/userid",
+  "/uuid",
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
@@ -75,7 +75,7 @@ router.get(
   }
 );
 router.get(
-  "/uuid",
+  "/userid",
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
