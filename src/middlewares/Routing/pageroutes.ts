@@ -14,6 +14,7 @@ import VerifyToken from "../JWTVerify";
 import ReplyComment from "../../controllers/Pages/ReplyComment";
 
 import supabase from "../../../supabase";
+import GetCommentersProfile from "../../actions/Pages/GetCommentersProfile";
 const pages = new GetListOfPages();
 const userid = new UserId();
 const userpages = new UserPages();
@@ -126,6 +127,21 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const result = await userProfileInformation.getPersonData(req.uuid);
+      res.status(200).json(result);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/commentersinfo",
+  validateUUIDMiddleware, // Apply the custom UUID validation middleware
+  async (req: Request, res: Response) => {
+    try {
+      const { psid, pagename } = req.body;
+      const result = await GetCommentersProfile(psid, pagename);
       res.status(200).json(result);
     } catch (error: any) {
       res.status(500).json({
