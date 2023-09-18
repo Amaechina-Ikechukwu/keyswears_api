@@ -33,13 +33,11 @@ const registerNewUser = async (
     if (insertRowError) {
       throw new Error(`There seems to be an error: ${insertRowError.message}`);
     } else {
-      const uid = {
-        usertoken: await SignToken({
-          userid: data.userId,
-          token: data.token!,
-          uuid: uuid,
-        }),
-      };
+      const uid = await SignToken({
+        userid: data.userId,
+        token: data.token,
+        uuid: uuid,
+      });
       return uid;
     }
   } catch (error: any) {
@@ -68,8 +66,13 @@ export async function loginDetails(
         const result = await registerNewUser(data, uuid);
         return result;
       } else {
-        // const result = await updateToken(data);
-        return userData[0].token;
+        const uid = await SignToken({
+          userid: userData[0].userId,
+          token: userData[0].token,
+          uuid: userData[0].uuid,
+        });
+
+        return uid;
       }
     }
   } catch (error: any) {
