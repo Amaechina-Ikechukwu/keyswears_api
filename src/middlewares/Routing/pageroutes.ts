@@ -66,6 +66,19 @@ router.get(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
+      res.status(200).json(req.uuid);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/uuid",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
       const userid: any = await returnUserId(req.uuid);
 
       res.status(200).json(userid);
