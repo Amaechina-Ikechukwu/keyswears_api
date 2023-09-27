@@ -66,11 +66,7 @@ export async function loginDetails(
         const result = await registerNewUser(data, uuid);
         return result;
       } else {
-        const uid = await SignToken({
-          userid: userData[0].userId,
-          token: userData[0].token,
-          uuid: userData[0].uuid,
-        });
+        const uid = await SignToken(userData[0]);
 
         return uid;
       }

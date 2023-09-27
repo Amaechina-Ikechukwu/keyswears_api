@@ -4,6 +4,7 @@ import pagesWebhookRouter from "./webhooks/PageWebhook";
 import "dotenv/config";
 const app = express();
 import pagesRouter from "./middlewares/Routing/pageroutes";
+import igRouter from "./middlewares/Routing/instagramroutes";
 app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = ["https://chooyagroup.com"];
@@ -26,6 +27,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 ////////////////////////////////
 app.use("/", pagesWebhookRouter);
 app.use("/", pagesRouter);
+app.use("/instagram", igRouter);
 ////////////////////////////////
 
 app.listen(3003, () => {
