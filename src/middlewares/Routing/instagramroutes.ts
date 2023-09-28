@@ -23,7 +23,7 @@ const html = `
     </html>
   `;
 const REDIRECT_URI =
-  "https://aa8b-129-205-113-160.ngrok-free.app/instagram/confirm";
+  "https://65c2-129-205-113-159.ngrok-free.app/instagram/confirm";
 router.get("/confirm", async (req, res) => {
   const { code } = req.query as { code: string }; // Explicitly cast `code` to string
 
@@ -66,7 +66,7 @@ router.get("/confirm", async (req, res) => {
 router.get("/getaccess", async (req, res) => {
   const { code } = req.body;
   const redirectUri =
-    "https://aa8b-129-205-113-160.ngrok-free.app/instagram/confirm";
+    "https://65c2-129-205-113-159.ngrok-free.app/instagram/confirm";
   const clientId = "6600635150017636";
   const clientSecret = "44419493af07f4ff46d0678060e2bc42";
 
