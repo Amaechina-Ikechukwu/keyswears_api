@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
 import axios from "axios"; // Import the axios library
 import "dotenv/config";
-
+import { v4 as uuidv4 } from "uuid";
+import { InstagramLogin } from "../../actions/Instagram/InstagramLogin";
 const router = Router();
 const html = `
     <!DOCTYPE html>
@@ -23,14 +24,14 @@ const html = `
     </html>
   `;
 const REDIRECT_URI =
-  "https://65c2-129-205-113-159.ngrok-free.app/instagram/confirm";
+  "https://ebc5-129-205-113-159.ngrok-free.app/instagram/confirm";
 router.get("/confirm", async (req, res) => {
   const { code } = req.query as { code: string }; // Explicitly cast `code` to string
 
   try {
     const redirectUri = REDIRECT_URI;
-    const clientId = "6600635150017636";
-    const clientSecret = "44419493af07f4ff46d0678060e2bc42";
+    const clientId = process.env.IG_CLIENT;
+    const clientSecret = process.env.IG_SECRET;
 
     // Create a FormData object to send as the request body
     const formData = new FormData();
@@ -55,47 +56,12 @@ router.get("/confirm", async (req, res) => {
     );
 
     const result = response.data;
-
-    console.log(result);
-    res.json({ access_token: result }); // Return the access token in the response
+    const newUUID = uuidv4();
+    const uid: any = await InstagramLogin(result, newUUID);
+    console.log(uid);
+    res.json({ uid }); // Return the access token in the response
   } catch (error) {
     console.error("Error while fetching Instagram access token:", error);
-    res.status(500).json({ error: "Failed to fetch Instagram access token." });
-  }
-});
-router.get("/getaccess", async (req, res) => {
-  const { code } = req.body;
-  const redirectUri =
-    "https://65c2-129-205-113-159.ngrok-free.app/instagram/confirm";
-  const clientId = "6600635150017636";
-  const clientSecret = "44419493af07f4ff46d0678060e2bc42";
-
-  try {
-    const response = await fetch(
-      "https://api.instagram.com/oauth/access_token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          client_id: clientId,
-          client_secret: clientSecret,
-          grant_type: "authorization_code",
-          redirect_uri: redirectUri,
-          code: code,
-        }).toString(),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch data");
-    }
-
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    console.error("Error:", error);
     res.status(500).json({ error: "Failed to fetch Instagram access token." });
   }
 });
