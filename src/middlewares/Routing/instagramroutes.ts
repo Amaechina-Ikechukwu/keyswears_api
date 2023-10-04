@@ -3,7 +3,21 @@ import axios from "axios"; // Import the axios library
 import "dotenv/config";
 import { v4 as uuidv4 } from "uuid";
 import { InstagramLogin } from "../../actions/Instagram/InstagramLogin";
+import GetUserInformation from "../../actions/Instagram/GetUserInformation";
+import validateUUIDMiddleware from "../ValidatedUUIDHeader";
+import QueryUserDetails from "../../actions/Instagram/QueryUserDetails";
+import PagesThatAreConnected from "../../actions/Instagram/PagesThatAreConnected";
+import AddConnectedPagesToSupabase from "../../actions/Instagram/AddConnectedPagesToSupabase";
+import GetInstagramBusinessAccountId from "../../actions/Instagram/GetInstagramBusinessAccountId";
+import GetMediaInsight from "../../actions/Instagram/GetMediaInsights";
 const router = Router();
+declare global {
+  namespace Express {
+    interface Request {
+      uuid?: string;
+    }
+  }
+}
 const html = `
     <!DOCTYPE html>
     <html lang="en">
@@ -74,5 +88,108 @@ router.post("/adduser", (req: Request, res: Response) => {
 router.get("/confirmed", (req: Request, res: Response) => {
   res.send(html);
 });
+router.get(
+  "/isuserregistered",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { instagramid } = await QueryUserDetails(req.uuid);
+      const data = instagramid;
+      res.json({ data });
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/user",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    // const token = req.query.token as string;
+    // or const { token } = req.query as { token: string };
+
+    try {
+      const { instagramid, token } = await QueryUserDetails(req.uuid);
+
+      const data = await GetUserInformation(instagramid, token);
+      res.json({ data });
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/pages",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { token } = await QueryUserDetails(req.uuid);
+      const data = await PagesThatAreConnected(token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+
+router.post(
+  "/confirmpages",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { uuid } = await QueryUserDetails(req.uuid);
+      const { pages } = req.body;
+      if (pages.length > 1) {
+        res.status(403).json({ message: "Please only select a page" });
+      } else {
+        await pages.map(async (page: any) => {
+          await AddConnectedPagesToSupabase(page, uuid);
+        });
+        res.status(200).json({ message: "done" });
+      }
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/registeruser",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { uuid } = await QueryUserDetails(req.uuid);
+      await GetInstagramBusinessAccountId(uuid);
+      res.status(200).json({ message: "done" });
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediainsight",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { media_id } = req.query as { media_id: string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await GetMediaInsight(media_id, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
 
 export default router;
