@@ -5,6 +5,7 @@ import "dotenv/config";
 const app = express();
 import pagesRouter from "./middlewares/Routing/pageroutes";
 import igRouter from "./middlewares/Routing/instagramroutes";
+import appRouter from "./middlewares/Routing/appspecificroute";
 app.use(express.json());
 app.use((req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
@@ -31,6 +32,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use("/", pagesWebhookRouter);
 app.use("/", pagesRouter);
 app.use("/instagram", igRouter);
+app.use("/app", appRouter);
 ////////////////////////////////
 
 app.listen(3003, () => {
