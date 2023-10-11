@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import checkRequestBodyWithParams from "../CheckBody";
 import { loginDetails } from "../../controllers/GetLoginDetails";
 import GetListOfPages from "../../controllers/Pages/GetListOfPages";
@@ -27,9 +27,18 @@ declare global {
   namespace Express {
     interface Request {
       uuid?: string;
+      redirectUri?: string;
     }
   }
 }
+
+router.use((req: Request, res: Response, next: NextFunction) => {
+  const { redirectUri } = req.query;
+  if (redirectUri) {
+    req.redirectUri = redirectUri as string;
+  }
+  next();
+});
 router.post(
   "/login",
   checkRequestBodyWithParams("userId", "token"),
