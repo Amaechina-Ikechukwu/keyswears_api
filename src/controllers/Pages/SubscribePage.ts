@@ -1,7 +1,10 @@
 import axios from "axios";
 
 class SubscribePages {
-  public async PagesToSubscribe(pages: any): Promise<string[]> {
+  public async PagesToSubscribe(pages: {
+    id: string;
+    access_token: string;
+  }): Promise<any> {
     try {
       const pageid = pages.id;
       const formData = new URLSearchParams();
@@ -10,7 +13,7 @@ class SubscribePages {
 
       const response = await axios.post(
         `https://graph.facebook.com/${pageid}/subscribed_apps`,
-        formData,
+        formData.toString(), // Use formData.toString() to send the data as a URL-encoded string
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -19,14 +22,12 @@ class SubscribePages {
       );
 
       const result = response.data;
-      console.log(result);
+
       return result;
     } catch (error: any) {
-      console.error("Error response status:", error.response?.status);
-      console.error("Error response data:", error.response?.data);
       throw new Error("Error fetching data: " + error);
     }
-  } 
+  }
 }
 
 export default SubscribePages;

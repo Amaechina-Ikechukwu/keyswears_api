@@ -166,19 +166,22 @@ router.post(
   async (req: Request, res: Response) => {
     const body = req.body;
     const pages = body.pages;
-    const verifiedToken = await VerifyToken(body.uuid);
-    try {
-      await pages.map(async (page: any) => {
-        await subscribePage.PagesToSubscribe(page);
+    const uuid = body.uuid;
 
-        await insertValueToArrayColumn(page, verifiedToken.uuid);
-      });
+    try {
+      const verifiedToken = await VerifyToken(uuid);
+
+      await Promise.all(
+        pages.map(async (page: any) => {
+          await subscribePage.PagesToSubscribe(page);
+          await insertValueToArrayColumn(page, verifiedToken.uuid);
+        })
+      );
 
       res.status(200).json({ message: "done" });
-    } catch (error: any) {
-      res.status(500).json({
-        error: error.message,
-      });
+    } catch (error) {
+      console.error("Error in /subscribe:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
