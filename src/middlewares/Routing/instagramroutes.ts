@@ -161,13 +161,14 @@ router.post(
     }
   }
 );
-router.get(
+router.post(
   "/registeruser",
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-      const { uuid } = await QueryUserDetails(req.uuid);
-      await GetInstagramBusinessAccountId(uuid);
+      const {page}= req.body
+      //const { uuid } = await QueryUserDetails(req.uuid);
+      await GetInstagramBusinessAccountId(page,req.uuid);
       res.status(200).json({ message: "done" });
     } catch (error: any) {
       res.status(500).json({
