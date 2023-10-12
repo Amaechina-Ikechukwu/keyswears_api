@@ -198,9 +198,9 @@ router.get(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-      const { user_id } = req.query as { user_id: string };
-      const { ig_token } = await QueryUserDetails(req.uuid);
-      const data = await GetAccountInsight(user_id, ig_token);
+
+      const { ig_token,instagramid } = await QueryUserDetails(req.uuid);
+      const data = await GetAccountInsight(instagramid, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
