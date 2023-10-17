@@ -11,6 +11,7 @@ import AddConnectedPagesToSupabase from "../../actions/Instagram/AddConnectedPag
 import GetInstagramBusinessAccountId from "../../actions/Instagram/GetInstagramBusinessAccountId";
 import GetMediaInsight from "../../actions/Instagram/GetMediaInsights";
 import GetAccountInsight from "../../actions/Instagram/GetAccountInsight";
+import GetUserSmallMedia from "../../actions/Instagram/GetUserSmallMedia";
 const router = Router();
 declare global {
   namespace Express {
@@ -170,6 +171,21 @@ router.post(
       //const { uuid } = await QueryUserDetails(req.uuid);
       await GetInstagramBusinessAccountId(page,req.uuid);
       res.status(200).json({ message: "done" });
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediadata",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { ig_token,instagramid } = await QueryUserDetails(req.uuid);
+      const data = await GetUserSmallMedia(instagramid, ig_token);
+      res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
         error: error.message,
