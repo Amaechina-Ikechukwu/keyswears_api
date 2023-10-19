@@ -218,7 +218,7 @@ router.get(
     try {
       const { media_id } = req.query as { media_id:string };
       const { ig_token } = await QueryUserDetails(req.uuid);
-      const data = await GetUserMediaComments(media_id, ig_token,"EAAHlU17ZCCYIBOZCbmjqdCzApawZBVwG5QwZBsRpQDGkdQXCIxXYH5STiMbZBetqY7VrPUwhiIDuKr2HESZC1LQkkf9kIC7BnzheGvmvOZAPOAKqYfwRHxDl6m1ocoutCzrNRUfylp11j7MGU4qgw1P13plwQZCIkoIGH7YvmZCvd8oiJUq4rE3F0PbZBZBNlcNe4UZD");
+      const data = await GetUserMediaComments(media_id, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
