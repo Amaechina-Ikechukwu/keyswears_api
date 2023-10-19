@@ -12,6 +12,8 @@ import GetInstagramBusinessAccountId from "../../actions/Instagram/GetInstagramB
 import GetMediaInsight from "../../actions/Instagram/GetMediaInsights";
 import GetAccountInsight from "../../actions/Instagram/GetAccountInsight";
 import GetUserSmallMedia from "../../actions/Instagram/GetUserSmallMedia";
+import GetUserFullMedia from "../../actions/Instagram/GetUserFullMedia";
+import GetUserMediaComments from "../../actions/Instagram/GetMediaComments";
 const router = Router();
 declare global {
   namespace Express {
@@ -179,12 +181,44 @@ router.post(
   }
 );
 router.get(
-  "/mediadata",
+  "/mediasmalldata",
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
       const { ig_token,instagramid } = await QueryUserDetails(req.uuid);
       const data = await GetUserSmallMedia(instagramid, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediafulldata",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { type,media_id } = req.query as { type: string,media_id:string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await GetUserFullMedia(type,media_id, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediacomments",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { media_id } = req.query as { media_id:string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await GetUserMediaComments(media_id, ig_token,"EAAHlU17ZCCYIBOZCbmjqdCzApawZBVwG5QwZBsRpQDGkdQXCIxXYH5STiMbZBetqY7VrPUwhiIDuKr2HESZC1LQkkf9kIC7BnzheGvmvOZAPOAKqYfwRHxDl6m1ocoutCzrNRUfylp11j7MGU4qgw1P13plwQZCIkoIGH7YvmZCvd8oiJUq4rE3F0PbZBZBNlcNe4UZD");
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
