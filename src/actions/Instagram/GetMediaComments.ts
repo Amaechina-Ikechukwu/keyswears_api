@@ -64,9 +64,7 @@ export default async function GetUserMediaComments( media_id: string, token: str
           const resultInformation = await GetCommentInformation(item.id, token)
         
           
-              const userInformation = await GetUserInformation(resultInformation.from.id, page_token)
-              const data = Object.assign(item,userInformation)
-            commentData.push(data)  
+            commentData.push(resultInformation)  
           
           
       }
