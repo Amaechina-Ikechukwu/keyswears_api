@@ -14,6 +14,10 @@ import GetAccountInsight from "../../actions/Instagram/GetAccountInsight";
 import GetUserSmallMedia from "../../actions/Instagram/GetUserSmallMedia";
 import GetUserFullMedia from "../../actions/Instagram/GetUserFullMedia";
 import GetUserMediaComments from "../../actions/Instagram/GetMediaComments";
+import HideMediaComments from "../../actions/Instagram/HideMediaComment";
+import DeleteMediaComments from "../../actions/Instagram/DeleteMediaComment";
+import GetCommentReplies from "../../actions/Instagram/GetCommentReplies";
+import CommentReply from "../../actions/Instagram/ReplyComment";
 const router = Router();
 declare global {
   namespace Express {
@@ -111,9 +115,6 @@ router.get(
   "/user",
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
-    // const token = req.query.token as string;
-    // or const { token } = req.query as { token: string };
-
     try {
       const { instagramid, token } = await QueryUserDetails(req.uuid);
 
@@ -169,9 +170,9 @@ router.post(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-      const {page}= req.body
+      const { page } = req.body;
       //const { uuid } = await QueryUserDetails(req.uuid);
-      await GetInstagramBusinessAccountId(page,req.uuid);
+      await GetInstagramBusinessAccountId(page, req.uuid);
       res.status(200).json({ message: "done" });
     } catch (error: any) {
       res.status(500).json({
@@ -185,7 +186,7 @@ router.get(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-      const { ig_token,instagramid } = await QueryUserDetails(req.uuid);
+      const { ig_token, instagramid } = await QueryUserDetails(req.uuid);
       const data = await GetUserSmallMedia(instagramid, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
@@ -200,9 +201,12 @@ router.get(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-      const { type,media_id } = req.query as { type: string,media_id:string };
+      const { type, media_id } = req.query as {
+        type: string;
+        media_id: string;
+      };
       const { ig_token } = await QueryUserDetails(req.uuid);
-      const data = await GetUserFullMedia(type,media_id, ig_token);
+      const data = await GetUserFullMedia(type, media_id, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
@@ -216,9 +220,76 @@ router.get(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-      const { media_id } = req.query as { media_id:string };
+      const { media_id } = req.query as { media_id: string };
       const { ig_token } = await QueryUserDetails(req.uuid);
       const data = await GetUserMediaComments(media_id, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediacommentsreply",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { comment_id } = req.query as { comment_id: string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await GetCommentReplies(comment_id, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.post(
+  "/mediareplycomment",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { comment_id, message } = req.body as {
+        comment_id: string;
+        message: string;
+      };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await CommentReply(comment_id, message, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediahidecomments",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { comment_id } = req.query as { comment_id: string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await HideMediaComments(comment_id, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediadeletecomments",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { comment_id } = req.query as { comment_id: string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await DeleteMediaComments(comment_id, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
@@ -248,8 +319,7 @@ router.get(
   validateUUIDMiddleware,
   async (req: Request, res: Response) => {
     try {
-
-      const { ig_token,instagramid } = await QueryUserDetails(req.uuid);
+      const { ig_token, instagramid } = await QueryUserDetails(req.uuid);
       const data = await GetAccountInsight(instagramid, ig_token);
       res.status(200).json(data);
     } catch (error: any) {

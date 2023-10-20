@@ -1,12 +1,12 @@
 import axios from "axios";
 import "dotenv/config";
 
-async function GetUserMediaCommentObjects(
-  media_id: string,
+async function GetUserMediaCommentRepliesObjects(
+  comment_id: string,
   token: string
 ): Promise<any> {
   try {
-    const url = `https://graph.facebook.com/v18.0/${media_id}/comments?access_token=${token}`;
+    const url = `https://graph.facebook.com/v18.0/${comment_id}/replies?access_token=${token}`;
     const response = await axios.get(url);
     return response.data;
   } catch (error: any) {
@@ -15,7 +15,7 @@ async function GetUserMediaCommentObjects(
   }
 }
 
-async function GetCommentInformation(
+async function GetCommentRepliesInformation(
   comment_id: string,
   token: string
 ): Promise<any> {
@@ -29,15 +29,18 @@ async function GetCommentInformation(
   }
 }
 
-export default async function GetUserMediaComments(
-  media_id: string,
+export default async function GetCommentReplies(
+  comment_id: string,
   token: string
 ): Promise<any[]> {
   try {
-    const result = await GetUserMediaCommentObjects(media_id, token);
+    const result = await GetUserMediaCommentRepliesObjects(comment_id, token);
     const commentData: any[] = [];
     for (const item of result.data) {
-      const resultInformation = await GetCommentInformation(item.id, token);
+      const resultInformation = await GetCommentRepliesInformation(
+        item.id,
+        token
+      );
 
       commentData.push(resultInformation);
     }
