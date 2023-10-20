@@ -18,6 +18,7 @@ import HideMediaComments from "../../actions/Instagram/HideMediaComment";
 import DeleteMediaComments from "../../actions/Instagram/DeleteMediaComment";
 import GetCommentReplies from "../../actions/Instagram/GetCommentReplies";
 import CommentReply from "../../actions/Instagram/ReplyComment";
+import UnHideMediaComments from "../../actions/Instagram/UnHideMediaComment";
 const router = Router();
 declare global {
   namespace Express {
@@ -274,6 +275,22 @@ router.get(
       const { comment_id } = req.query as { comment_id: string };
       const { ig_token } = await QueryUserDetails(req.uuid);
       const data = await HideMediaComments(comment_id, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/mediaunhidecomments",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { comment_id } = req.query as { comment_id: string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await UnHideMediaComments(comment_id, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
