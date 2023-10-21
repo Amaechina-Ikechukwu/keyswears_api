@@ -20,7 +20,7 @@ async function GetCommentRepliesInformation(
   token: string
 ): Promise<any> {
   try {
-    const url = `https://graph.facebook.com/v18.0/${comment_id}?fields=from,hidden,id,like_count,media,parent_id,replies,text,timestamp,user,username&access_token=${token}`;
+    const url = `https://graph.facebook.com/v18.0/${comment_id}?fields=from,hidden,id,like_count,parent_id,text,timestamp,user,username&access_token=${token}`;
     const response = await axios.get(url);
     return response.data;
   } catch (error: any) {
@@ -46,7 +46,7 @@ export default async function GetCommentReplies(
     }
     return commentData;
   } catch (error: any) {
-    console.error("Error while fetching Media Data:", error.message);
-    throw new Error("Failed to fetch Media Data.");
+    console.error("Error while fetching Comment Replies:", error.message);
+    throw new Error("Failed to fetch Comment Replies.");
   }
 }
