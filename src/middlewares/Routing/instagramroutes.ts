@@ -19,6 +19,7 @@ import DeleteMediaComments from "../../actions/Instagram/DeleteMediaComment";
 import GetCommentReplies from "../../actions/Instagram/GetCommentReplies";
 import CommentReply from "../../actions/Instagram/ReplyComment";
 import UnHideMediaComments from "../../actions/Instagram/UnHideMediaComment";
+import BusinessDiscovery from "../../actions/Instagram/BusinessDiscovery";
 const router = Router();
 declare global {
   namespace Express {
@@ -338,6 +339,22 @@ router.get(
     try {
       const { ig_token, instagramid } = await QueryUserDetails(req.uuid);
       const data = await GetAccountInsight(instagramid, ig_token);
+      res.status(200).json(data);
+    } catch (error: any) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  }
+);
+router.get(
+  "/businessdiscovery",
+  validateUUIDMiddleware,
+  async (req: Request, res: Response) => {
+    try {
+      const { name, id } = req.query as { name: string; id: string };
+      const { ig_token } = await QueryUserDetails(req.uuid);
+      const data = await BusinessDiscovery(id, name, ig_token);
       res.status(200).json(data);
     } catch (error: any) {
       res.status(500).json({
